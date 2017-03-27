@@ -1,0 +1,37 @@
+{
+  "variables" : {
+    "home" : "{{ env `HOME` }}"
+  },
+
+  "builders" : [
+    {
+      "type" : "amazon-ebs",
+      "region" : "us-east-1",
+      "source_ami" : "ami-40d28157",
+      "instance_type" : "t2.small",
+      "ami_name" : "hashcorp-{{ timestamp }}",
+      "ami_users": "{{user `ami_users`}}",
+
+      "access_key" : "{{ user `access_key` }}",
+      "secret_key" : "{{ user `secret_key` }}",
+
+      "ssh_username" : "ubuntu"
+    }
+  ],
+
+  "provisioners" : [
+    {
+        "type": "shell",
+        "inline": [
+          "sudo apt-get update",
+          "sudo apt-get install --fix-missing -y",
+          "sudo apt-get -y install python-simplejson"
+        ]
+    },
+    {
+        "type": "ansible",
+        "playbook_file": "hashiami/playbook.yml",
+        "host_alias": "hashicorp"
+    }
+  ]
+}

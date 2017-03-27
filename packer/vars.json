@@ -1,0 +1,9 @@
+{
+	"vpc_id" : "vpc-c12e0ea7",
+
+	"access_key" : "AKIAIQMJLEKDFAYCVYZQ",
+	"secret_key" : "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",
+
+  "ssh_key_path": "/Users/nmaccarthy/.ssh/id_rsa"
+
+}

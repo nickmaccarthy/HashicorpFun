@@ -1,0 +1,7 @@
+- hosts:
+    - hashicorp
+  gather_facts: true
+  remote_user: ubuntu
+
+  roles:
+    - hashi_base

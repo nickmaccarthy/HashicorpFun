@@ -1,0 +1,29 @@
+
+- name: "apt-get update all the things"
+  apt:
+    update_cache: yes
+  become: yes
+  become_user: root
+
+- name: apt-get install --fix-missing
+  command: apt-get install --fix-missing
+  register: apt_get_fix_missing
+  become: yes
+  become_user: root
+
+- name: "Install base packages"
+  apt:
+    name: "{{item}}"
+  with_items:
+    - vim
+    - git
+    - wget
+    - daemon
+    - build-essential
+    - python-dev
+    - libsqlite3-dev
+    - python-lxml
+    - python-pip
+    - grc
+  become: yes
+  become_user: root

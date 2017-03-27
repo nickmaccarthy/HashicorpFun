@@ -1,0 +1,7 @@
+*.vars.json
+.swp
+*.tfstate
+*.retry
+*.backup
+*.tmp
+*.wtf
