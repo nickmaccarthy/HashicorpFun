@@ -1,0 +1,15 @@
+consul_version: 0.6.3
+consul_archive: "consul_{{ consul_version }}_linux_amd64.zip"
+consul_download: "https://releases.hashicorp.com/consul/{{ consul_version }}/{{ consul_archive }}"
+consul_download_dir: "/tmp"
+consul_download_foler: "{{consul_download_dir}}"
+
+consul_home: /opt/consul
+consul_config_dir: /etc/consul.d
+consul_config_file: /etc/consul.conf
+
+consul_data_dir: "{{ consul_home }}/data"
+consul_log_file: "/var/log/consul/consul.log"
+
+consul_group: consul
+consul_user: consul

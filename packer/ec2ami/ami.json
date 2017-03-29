@@ -30,7 +30,7 @@
     },
     {
         "type": "ansible",
-        "playbook_file": "../ansible/playbook.yml",
+        "playbook_file": "ec2ami/playbook.yml",
         "host_alias": "hashicorp"
     }
   ]
