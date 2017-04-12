@@ -12,7 +12,6 @@ from boto import sts
 import six
 from pprint import pprint
 import ConfigParser
-parser = ConfigParser.ConfigParser()
 
 from ansible.module_utils import ec2 as ec2_utils
 
@@ -26,10 +25,14 @@ except ImportError:
 from six.moves import configparser
 from collections import defaultdict
 
+here = os.path.dirname(os.path.realpath(__file__))
+
 try:
     import json
 except ImportError:
     import simplejson as json
+
+parser = ConfigParser.ConfigParser()
 
 session = boto3.Session(profile_name='hashicorp')
 
@@ -58,5 +61,5 @@ for cluster, details in hosts.items():
         key = "{name} ansible_ssh_host={ip} ansible_ssh_user=ubuntu ansible_ssh_common_args='-o StrictHostKeyChecking=no'".format(name=detail['name'], ip=detail['ip'])
         parser.set(cluster, key, '')
 
-with open('inventory/ansible_aws_inventory', 'w') as f:
+with open('%s/inventory/ansible_aws_inventory' % here, 'w') as f:
     parser.write(f)

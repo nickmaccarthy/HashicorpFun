@@ -82,8 +82,7 @@ terraform apply
 ```
 * Now run ansible to configure our hosts and get the cluster(s) up and running
 ```
-  cd $PROJECT_HOME/ansible
-  ansible-playbook -i inventory/ansible_aws_inventory cluster.yml
+  $PROJECT_HOME/ansible/run_ansible_ec2.sh 
 ```
   * Note: This might take a few minutes to complete
 * Check to see if everything is up and running
