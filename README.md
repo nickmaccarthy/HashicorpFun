@@ -50,8 +50,13 @@ terraform apply
 ```
 * Create an ec2 keypair named `hashicorp` and place it in `~/.ssh` locally
   * If you dont want to create a new keypair, simply override the `hashicorp` keypair in the Terraform ec2 build step with whatever keypair you want to use
+* Create a `$PROJECT_HOME/packer/vars.json` file for Packer with the following insde
+```
+{
+    "ssh_pub_key_path": "/Full/Path/to/.ssh/id_rsa.pub"
+}
+```
 * Use Packer to make an AMI for us Pack the AMI
-  *  In `vars.json` fill in the location to your local ssh key, packer will copy your ssh key in to the AMI so you can SSH into the instance after you have built it
 ```
   cd $PROJECT_HOME/packer
   packer validate -var-file=vars.json hashiami/ami.json
@@ -59,6 +64,7 @@ terraform apply
   packer build -var-file=vars.json hashiami/ami.json
 ```
 * Build our ec2 instances in our VPC with Terraform
+    * Note this will build ec2 instances using the AMI from our Packer build above
 ```
   cd $PROJECT_HOME
   cd terraform/cluster
