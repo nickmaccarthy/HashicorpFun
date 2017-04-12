@@ -1,0 +1,52 @@
+---
+- name: install appserver packages
+  apt:
+    name: "{{item}}"
+  with_items:
+    - nginx
+
+- name: consul services configs
+  template:
+    src: "etc/consul.d/{{item}}"
+    dest: "/etc/consul.d/{{item}}"
+    owner: "{{consul_user}}"
+    group: "{{consul_group}}"
+  with_items:
+    - service_nginx.json
+  notify:
+    - restart consul
+
+- name: consul config template
+  template:
+    src: etc/consul-template.d/config
+    dest: /etc/consul-template.d/config
+    owner: consul
+    group: consul
+  notify: restart consul-template
+
+- name: install template service upstart
+  template:
+    src: "etc/init/consul-template.conf"
+    dest: "/etc/init/consul-template.conf"
+    owner: consul
+    group: consul
+  notify:
+    - restart consul-template
+
+- name: nginx consul config template
+  copy:
+    src: nginx_conf.tmpl
+    dest: /etc/consul-template.d/nginx_conf.tmpl
+    owner: consul
+    group: consul
+  notify:
+    - restart consul-template
+
+- name: make index.html template
+  copy:
+    src: index.html.tmpl
+    dest: /etc/consul-template.d/index.html.tmpl
+    owner: consul
+    group: consul
+  notify:
+    - restart consul-template

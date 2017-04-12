@@ -1,0 +1,9 @@
+---
+- name: consul agent config file
+  template:
+    src: etc/consul.d/client.json
+    dest: /etc/consul.d/client.json
+    owner: "{{consul_user}}"
+    group: "{{consul_group}}"
+  notify:
+    - restart consul

@@ -1,20 +1,48 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-# All Vagrant configuration is done below. The "2" in Vagrant.configure
-# configures the configuration version (we support older styles for
-# backwards compatibility). Please don't change it unless you know what
-# you're doing.
+playbook_file = 'ansible/vagrant.yml'
+
 Vagrant.configure("2") do |config|
 
-  config.vm.define "hashicorp" do |hashicorp|
-    # Every Vagrant development environment requires a box. You can search for
-    # boxes at https://atlas.hashicorp.com/search.
-    hashicorp.vm.box = "ubuntu/trusty64"
-    hashicorp.vm.hostname = "hashicorp"
-    hashicorp.vm.provision "ansible" do |ansible|
-      ansible.playbook = "ansible/playbook.yml"
+  config.vm.define "consul1" do |consul1|
+    consul1.vm.box = "ubuntu/trusty64"
+    consul1.vm.hostname = "consul1"
+    consul1.vm.network "private_network", ip: "192.168.77.20"
+    consul1.vm.provision "ansible" do |ansible|
+      ansible.playbook = playbook_file
       ansible.verbose = true
     end
   end
+
+  config.vm.define "consul2" do |consul2|
+    consul2.vm.box = "ubuntu/trusty64"
+    consul2.vm.hostname = "consul2"
+    consul2.vm.network "private_network", ip: "192.168.77.21"
+    consul2.vm.provision "ansible" do |ansible|
+      ansible.playbook = playbook_file
+      ansible.verbose = true
+    end
+  end
+
+  config.vm.define "vault" do |vault |
+    vault.vm.box = "ubuntu/trusty64"
+    vault.vm.hostname = "vault"
+    vault.vm.network "private_network", ip: "192.168.77.25"
+    vault.vm.provision "ansible" do |ansible|
+      ansible.playbook = playbook_file
+      ansible.verbose = true
+    end
+  end
+
+  config.vm.define "appserver" do |appserver|
+    appserver.vm.box = "ubuntu/trusty64"
+    appserver.vm.hostname = "app1"
+    appserver.vm.network "private_network", ip: "192.168.77.10"
+    appserver.vm.provision "ansible" do |ansible|
+      ansible.playbook = playbook_file
+      ansible.verbose = true
+    end
+  end
+
 end

@@ -1,0 +1,40 @@
+- name: pip install python-consul
+  pip:
+    name: python-consul
+
+- name: boostrap or not to bootstrap, that is the question
+  set_fact:
+    consul_server_bootstrap: true
+  when: ansible_hostname == "consul1"
+
+- name: consul server config file
+  template:
+    src: etc/consul.d/server.json
+    dest: "{{consul_server_config_file}}"
+    owner: "{{consul_user}}"
+    group: "{{consul_group}}"
+  notify:
+    - restart consul server
+  register: consul_server_started
+
+- name: start consul server
+  service:
+    name: consul
+    state: started
+    enabled: yes
+
+- name: consul server status
+  command: service consul status
+  register: consul_status
+  failed_when: "'stop/waiting' in consul_status.stdout"
+
+- name: consul key/vals
+  consul_kv:
+    key: "{{item.key}}"
+    value: "{{item.value}}"
+    host: "{{default_interface_address}}"
+  with_items:
+    - { key: nginx/default_port, value: 80 }
+    - { key: foo, value: bar}
+  when:
+    - consul_status.rc == 0

@@ -1,0 +1,10 @@
+{
+    "server": false,
+    "datacenter": "east-aws",
+    "data_dir": "{{consul_data_dir}}",
+    "log_level": "INFO",
+    "enable_syslog": true,
+    "bind_addr": "{{default_interface_address}}",
+    "client_addr": "127.0.0.1",
+    "start_join": {{consul_servers|to_json}}
+}

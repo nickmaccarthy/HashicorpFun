@@ -1,0 +1,42 @@
+-
+  hosts:
+    - consul1
+    - consul2
+  gather_facts: true
+  become: yes
+  become_user: root
+  roles:
+    - base
+    - hashi_consul_base
+    - hashi_consul_server
+    - hashi_vault
+  vars:
+      default_interface_address: "{{ansible_eth0.ipv4.address}}"
+-
+  hosts: appserver
+  gather_facts: true
+  become: yes
+  become_user: root
+  roles:
+    - base
+    - role: hashi_consul_base
+      consul_config_file: "/etc/consul.d/client.json"
+    - hashi_consul_agent
+    - appserver
+    - hashi_vault
+  vars:
+      default_interface_address: "{{ansible_eth0.ipv4.address}}"
+-
+  hosts: vault
+  gather_facts: true
+  become: yes
+  become_user: root
+  roles:
+    - base
+    - role: hashi_consul_base
+      consul_config_file: "/etc/consul.d/client.json"
+    - hashi_consul_agent
+    - hashi_vault
+  vars:
+    is_vault_server: true
+    default_interface_address: "{{ansible_eth0.ipv4.address}}"

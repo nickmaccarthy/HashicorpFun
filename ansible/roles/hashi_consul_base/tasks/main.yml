@@ -1,0 +1,79 @@
+- name: create consul group
+  group:
+    name: "{{consul_group}}"
+    state: present
+    system: yes
+  register: consul_group_created
+
+- name: create consul user
+  user:
+    home: "{{consul_home}}"
+    name: "{{consul_user}}"
+    group: "{{consul_group}}"
+    system: yes
+  when: consul_group_created|changed
+
+- name: create consul dirs
+  file:
+    path: "{{item}}"
+    state: directory
+    owner: "{{consul_user}}"
+    group: "{{consul_group}}"
+    mode: 0755
+  with_items:
+    - "{{ consul_home }}"
+    - "{{ consul_home }}/bin"
+    - "{{ consul_home }}/cert"
+    - "{{ consul_data_dir }}"
+    - "{{ consul_config_dir }}"
+    - "{{ consul_config_dir }}/server"
+    - "{{ consul_config_dir }}/agent"
+    - "{{ consul_template_dir}}"
+
+- name: create consul log directory
+  file:
+    path: "{{consul_log_file|dirname}}"
+    state: directory
+
+- name: touch consul log file
+  file:
+    state: touch
+    path: "{{consul_log_file}}"
+    owner: "{{consul_user}}"
+    group: "{{consul_group}}"
+  changed_when: false
+
+- name: unarchive consul zip
+  unarchive:
+    src: "{{consul_archive}}"
+    dest: "{{consul_home}}/bin"
+    remote_src: false
+
+- name: set ownership
+  file:
+    state: directory
+    path: "{{consul_home}}"
+    owner: "{{consul_user}}"
+    group: "{{consul_group}}"
+    recurse: yes
+
+- name: symlink conul to /usr/local/bin/consul
+  file:
+    state: link
+    src: "{{consul_home}}/bin"
+    dest: /usr/local/bin/consul
+
+- name: create consul upstart script
+  template:
+    src: etc/init/consul.conf
+    dest: /etc/init/consul.conf
+    owner: "{{consul_user}}"
+    group: "{{consul_group}}"
+  notify:
+    - restart consul
+
+- name: unarchive consul template zip
+  unarchive:
+    src: "{{consul_template_archive}}"
+    dest: "{{consul_home}}/bin"
+    remote_src: false

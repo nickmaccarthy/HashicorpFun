@@ -1,9 +1,0 @@
-- hosts:
-    - hashicorp
-  gather_facts: true
-  become: yes
-  become_user: root
-
-  roles:
-    - hashi_base
-    - hashi_consul

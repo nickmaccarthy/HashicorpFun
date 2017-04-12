@@ -1,0 +1,12 @@
+
+- name: restart nginx
+  service:
+    name: nginx
+    state: restarted
+    enabled: yes
+
+- name: restart consul-template
+  service:
+    name: consul-template
+    state: restarted
+    enabled: yes

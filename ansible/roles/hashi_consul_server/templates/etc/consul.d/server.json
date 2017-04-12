@@ -1,0 +1,11 @@
+{
+  "bootstrap": {{ consul_server_bootstrap | to_json }},
+  "server": true,
+  "datacenter": "east-aws",
+  "data_dir": "{{consul_data_dir}}",
+  "log_level": "INFO",
+  "node_name": "{{ansible_hostname}}",
+  "bind_addr": "{{default_interface_address}}",
+  "client_addr": "{{default_interface_address}}",
+  "start_join": {{ consul_servers | to_json }}
+}

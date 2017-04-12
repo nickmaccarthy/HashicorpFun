@@ -1,8 +1,16 @@
 *.vars.json
 .swp
 *.tfstate
+*.terraform
 *.retry
 *.backup
 *.tmp
 *.wtf
 *.vagrant
+env
+*.DS_Store*
+*.log
+test.html
+test.py
+ansible_aws_inventory
+aws_inventory

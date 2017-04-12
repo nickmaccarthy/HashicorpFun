@@ -1,0 +1,25 @@
+<html>
+
+<head>
+  <style>
+    body {
+      background-color: light-grey;
+      font-family: arial;
+    }
+  </style>
+</head>
+
+<body>
+
+<p>Hi there!</p>
+<p>This is the output of a Consul, Consul-Template and Vault demo.</p>
+<p>The Database User and Password you see below comes from a Vault instance running on a sperate server, while this html file was created with consul-template</p>
+<p>The nginx config that is allowing you to see this was also generated from key/vals stored in consul and was rendered by consul-template as well.</p>
+{{ with secret "secret/database" }}
+<p> Example database username and password derived from Vault </p>
+<p><b>Database User</b>: {{ .Data.user }} <b>Database Password</b>: {{ .Data.password }}</p>
+{{ end }}
+
+</body>
+
+</html>

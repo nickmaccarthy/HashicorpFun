@@ -1,0 +1,89 @@
+- name: create vault group
+  group:
+    name: vault
+    state: present
+    system: yes
+
+- name: create vault user
+  user:
+    home: /opt/vault
+    name: vault
+    group: vault
+
+- name: create vault dirs
+  file:
+    state: directory
+    name: "{{item}}"
+    owner: vault
+    group: vault
+  with_items:
+    - /etc/vault.d
+    - /opt/vault
+    - /opt/vault/bin
+    - /opt/vault/data
+    - /var/log/vault
+
+- name: Unarchive vault
+  unarchive:
+    src: vault_0.7.0_linux_amd64.zip
+    dest: /opt/vault/bin
+
+- name: set ownership
+  file:
+    state: directory
+    path: /opt/vault
+    owner: vault
+    group: vault
+    recurse: yes
+
+- name: symlink bin/vault to /usr/local/bin/vault
+  file:
+    state: link
+    src: /opt/vault/bin/vault
+    dest: /usr/local/bin/vault
+
+- name: vault profile env vars
+  template:
+    src: etc/profile.d/vault.sh
+    dest: /etc/profile.d/vault.sh
+
+- name: create upstart script
+  template:
+    src: etc/init/vault.conf
+    dest: /etc/init/vault.conf
+  notify:
+    - restart vault
+  when:
+    - "is_vault_server == True"
+
+- name: Vault configuration
+  template:
+    src: etc/vault.d/vault.conf
+    dest: /etc/vault.d/vault.conf
+    owner: vault
+    group:  vault
+    mode: "0400"
+  notify:
+    - restart vault
+  when:
+    - "is_vault_server == True"
+
+- name: "start vault service"
+  service:
+    name: vault
+    enabled: yes
+    state: restarted
+  register: vault_started
+  when: "is_vault_server == True"
+
+- name: "add vault secrets"
+  shell: "{{item}}"
+  with_items:
+    - /opt/vault/bin/vault write secret/database user=db_user password=password1234
+  environment:
+    VAULT_ADDR: http://127.0.0.1:8200
+  become: yes
+  become_user: root
+  when:
+    - "is_vault_server == True"
+    - vault_started

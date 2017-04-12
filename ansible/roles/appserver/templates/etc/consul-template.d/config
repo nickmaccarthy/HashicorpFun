@@ -1,0 +1,27 @@
+log_level = "debug"
+
+template {
+  source          = "/etc/consul-template.d/nginx_conf.tmpl"
+  destination     = "/etc/nginx/sites-available/default"
+  command         = "service nginx restart"
+  command_timeout = "60s"
+  perms           = 0600
+  backup          = true
+}
+
+template {
+  source          = "/etc/consul-template.d/index.html.tmpl"
+  destination     = "/usr/share/nginx/html/index.html"
+  command         = ""
+  command_timeout = "60s"
+  backup          = true
+}
+
+vault {
+  address         = "{{vault_server}}"
+  token           = "610bd835-ff78-9de9-fe39-d0c49329d855"
+  renew_token     = false
+  ssl {
+    enabled = false
+  }
+}

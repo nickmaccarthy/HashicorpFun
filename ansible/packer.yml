@@ -1,0 +1,12 @@
+- hosts:
+    - hashicorp
+  gather_facts: true
+  become: yes
+  become_user: root
+
+  roles:
+    - base
+    - hashi_consul_base
+    - hashi_vault
+  vars:
+    default_interface_address: "{{ansible_eth0.ipv4.address}}"

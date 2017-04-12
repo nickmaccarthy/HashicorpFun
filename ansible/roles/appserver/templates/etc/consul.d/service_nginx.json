@@ -1,0 +1,15 @@
+{
+  "service": {
+    "name": "nginx",
+    "tags": ["primary"],
+    "port": 80,
+    "address": "{{default_interface_address}}",
+    "enableTagOverride": false,
+    "checks": [
+      {
+      "tcp": "localhost:80",
+      "interval": "10s"
+      }
+    ]
+  }
+}

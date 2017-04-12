@@ -1,0 +1,27 @@
+consul_version: 0.7.5
+consul_archive: "consul_{{ consul_version }}_linux_amd64.zip"
+consul_download: "https://releases.hashicorp.com/consul/{{ consul_version }}/{{ consul_archive }}"
+consul_download_dir: "/tmp"
+consul_download_foler: "{{consul_download_dir}}"
+
+consul_template_version: 0.18.0
+consul_template_archive: "consul-template_{{consul_template_version}}_linux_amd64.zip"
+consul_template_download: "https://releases.hashicorp.com/consul-template/{{consul_version}}/{{consul_archive}}"
+consul_template_dir: "/etc/consul-template.d"
+
+consul_home: /opt/consul
+consul_config_dir: /etc/consul.d
+consul_config_file: /etc/consul.conf
+consul_server_config_file: /etc/consul.d/server.json
+
+consul_data_dir: "{{ consul_home }}/data"
+consul_log_file: "/var/log/consul/consul.log"
+
+consul_group: consul
+consul_user: consul
+
+consul_servers:
+  - 192.168.77.20
+  - 192.168.77.21
+
+consul_server_bootstrap: false
