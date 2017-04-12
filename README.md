@@ -88,7 +88,12 @@ terraform apply
   * Note: This might take a few minutes to complete
 * Check to see if everything is up and running
   * Point browser to the IP address of your appserver, you should see confirmation things are working
-  * Point your browser to the IP address of one of the consul servers, http://<consulIP>:8500 , you should see the consul ui page
+  * If you want to view the consul UI do the following
+    * In AWS find your `hashicorp` SG, and add the following
+        * `ingress -> <your ip> -> tcp -> 8000-9000`
+        * or copy the already existing entry for `192.168.0.0/16` and change it to either `0.0.0.0/0` or your WAN IP
+        * Note that if you use `0.0.0.0/0` this will be wide open to anyone on the internet, so be careful
+    * Point your browser to the IP address of one of the consul servers, http://<consulIP>:8500 , you should see the consul ui page
 
 # Vagrant Build Steps
 -------------------------
