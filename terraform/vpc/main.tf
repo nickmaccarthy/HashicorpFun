@@ -20,17 +20,6 @@ resource "aws_vpc" "hashicorp" {
   }
 }
 
-/*
-resource "aws_subnet" "hashicorp-public" {
-  vpc_id = "${aws_vpc.hashicorp.id}"
-  cidr_block = "192.168.88.0/24"
-  availability_zone = "${var.az}"
-  tags {
-    Name = "hashicorp-public-${var.az}"
-  }
-}
-*/
-
 resource "aws_subnet" "hashicorp-default" {
   vpc_id     = "${aws_vpc.hashicorp.id}"
   cidr_block = "192.168.77.0/24"
@@ -78,29 +67,7 @@ resource "aws_route_table" "public_route_table" {
 resource "aws_route" "public_route" {
   route_table_id = "${aws_route_table.public_route_table.id}"
   destination_cidr_block = "0.0.0.0/0"
-  nat_gateway_id = "${aws_nate_gateway.nat.id}"
-}
-
-/*
-resource "aws_route" "private_route" {
-	route_table_id  = "${aws_route_table.private_route_table.id}"
-	destination_cidr_block = "0.0.0.0/0"
-	nat_gateway_id = "${aws_nat_gateway.nat.id}"
-}
-*/
-
-/*
-# Associate subnet public_subnet_eu_west_1a to public route table
-resource "aws_route_table_association" "hashicorp-public_association" {
-    subnet_id = "${aws_subnet.hashicorp-public.id}"
-    route_table_id = "${aws_vpc.hashicorp.main_route_table_id}"
-}
-*/
-
-# Associate subnet private_1_subnet_eu_west_1a to private route table
-resource "aws_route_table_association" "hashicorp-default_association" {
-    subnet_id = "${aws_subnet.hashicorp-default.id}"
-    route_table_id = "${aws_route_table.private_route_table.id}"
+  nat_gateway_id = "${aws_nat_gateway.nat.id}"
 }
 
 resource "aws_security_group" "hashicorp" {
@@ -114,7 +81,7 @@ resource "aws_security_group" "hashicorp" {
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
-  
+
   egress {
     from_port = 0
     to_port = 0
